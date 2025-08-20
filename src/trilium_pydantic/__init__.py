@@ -1,23 +1,46 @@
-"""Trilium-pydantic: Type-safe TriliumNext API client."""
+#!/usr/bin/env python3
+"""trilium-pydantic: Type-safe TriliumNext API client with Pydantic models."""
 
 from __future__ import annotations
 
 from .client import TriliumClient
-from .config import TriliumConfig, load_config
+from .config import TriliumConfig, ConnectionInfo
 from .exceptions import (
-    TriliumAPIError,
-    TriliumConfigError,
     TriliumError,
-    TriliumValidationError,
+    TriliumAPIError,
+    TriliumConnectionError,
+    TriliumConfigError,
+)
+from .models import (
+    AppInfo,
+    ConnectionTest,
+    CreateNoteRequest,
+    CreateNoteResponse,
+    Note,
+    SearchRequest,
+    SearchResult,
+    UpdateNoteRequest,
+    NoteAttribute,
+    NoteAttributes,
 )
 
 __version__ = "0.1.0"
 __all__ = [
     "TriliumClient",
     "TriliumConfig",
-    "load_config",
+    "ConnectionInfo",
     "TriliumError",
     "TriliumAPIError",
+    "TriliumConnectionError",
     "TriliumConfigError",
-    "TriliumValidationError",
+    "AppInfo",
+    "ConnectionTest",
+    "CreateNoteRequest",
+    "CreateNoteResponse",
+    "Note",
+    "SearchRequest",
+    "SearchResult",
+    "UpdateNoteRequest",
+    "NoteAttribute",
+    "NoteAttributes",
 ]

@@ -1,39 +1,73 @@
-"""Configuration management for trilium-pydantic."""
+#!/usr/bin/env python3
+"""Configuration management for trilium-pydantic.
+
+Handles environment-based configuration with validation.
+"""
 
 from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Optional
 
-from dotenv import load_dotenv
-from pydantic import Field
+from pydantic import BaseModel, Field, validator
 from pydantic_settings import BaseSettings
 
 
 class TriliumConfig(BaseSettings):
-    """TriliumNext configuration settings."""
+    """Configuration for TriliumNext client.
 
-    url: str = Field(
-        default="http://localhost:8081", env="TRILIUM_URL", alias="trilium_url"
+    Loads from environment variables or .env file.
+    """
+
+    trilium_url: str = Field(
+        default="http://localhost:8081", description="TriliumNext server URL"
     )
-    token: str = Field(default="", env="TRILIUM_TOKEN", alias="trilium_token")
-    log_level: str = Field(default="INFO", env="LOG_LEVEL")
+    trilium_token: Optional[str] = Field(
+        default=None, description="ETAPI authentication token"
+    )
+    log_level: str = Field(default="INFO", description="Logging level")
 
     class Config:
-        """Pydantic configuration."""
-
         env_file = ".env"
         env_file_encoding = "utf-8"
+        case_sensitive = False
+
+    @validator("trilium_url")
+    def validate_url(cls, v: str) -> str:
+        """Ensure URL doesn't end with slash."""
+        return v.rstrip("/")
+
+    @validator("trilium_token")
+    def validate_token(cls, v: Optional[str]) -> Optional[str]:
+        """Validate token is not empty."""
+        if v is not None and v.strip() == "":
+            return None
+        return v
+
+    def is_configured(self) -> bool:
+        """Check if minimum configuration is present."""
+        return self.trilium_token is not None
 
 
-def load_config(env_file: Path | str | None = None) -> TriliumConfig:
-    """Load configuration from environment or .env file."""
-    if env_file:
-        load_dotenv(env_file)
-    else:
-        # Try to load from current directory
-        env_path = Path.cwd() / ".env"
-        if env_path.exists():
-            load_dotenv(env_path)
+class ConnectionInfo(BaseModel):
+    """Information about TriliumNext server connection."""
 
-    return TriliumConfig()
+    server_url: str
+    token_preview: str
+    is_connected: bool = False
+    app_version: Optional[str] = None
+    build_date: Optional[str] = None
+
+    @classmethod
+    def from_config(cls, config: TriliumConfig) -> ConnectionInfo:
+        """Create connection info from config."""
+        token_preview = ""
+        if config.trilium_token:
+            token = config.trilium_token
+            if len(token) > 10:
+                token_preview = f"{token[:5]}***{token[-3:]}"
+            else:
+                token_preview = "***"
+
+        return cls(server_url=config.trilium_url, token_preview=token_preview)

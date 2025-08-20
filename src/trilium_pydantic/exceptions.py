@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 """Custom exceptions for trilium-pydantic."""
-
 from __future__ import annotations
 
 
@@ -8,20 +8,16 @@ class TriliumError(Exception):
     pass
 
 
-class TriliumAPIError(TriliumError):
-    """API-related errors."""
-    
-    def __init__(self, message: str, status_code: int | None = None):
-        super().__init__(message)
-        self.message = message
-        self.status_code = status_code
-
-
-class TriliumConfigError(TriliumError):
-    """Configuration-related errors."""
+class TriliumConnectionError(TriliumError):
+    """Raised when connection to TriliumNext fails."""
     pass
 
 
-class TriliumValidationError(TriliumError):
-    """Validation-related errors."""
+class TriliumAPIError(TriliumError):
+    """Raised when API operation fails."""
+    pass
+
+
+class TriliumConfigError(TriliumError):
+    """Raised when configuration is invalid."""
     pass
