@@ -1,6 +1,6 @@
 [project]
 name = "trilium-pydantic"
-version = "0.1.1"
+version = "0.1.2"
 description = "Type-safe Python library for TriliumNext ETAPI"
 authors = [
     {name = "Bullish-Design", email = "BullishDesignEngineering@gmail.com"}
