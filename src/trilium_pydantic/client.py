@@ -11,8 +11,8 @@ from typing import Dict, Any, Optional
 
 from trilium_py.client import ETAPI
 
-from config import TriliumConfig, ConnectionInfo
-from models import (
+from .config import TriliumConfig, ConnectionInfo
+from .models import (
     AppInfo,
     CreateNoteRequest,
     CreateNoteResponse,
@@ -23,7 +23,7 @@ from models import (
     ConnectionTest,
     ErrorResponse,
 )
-from exceptions import TriliumAPIError, TriliumConnectionError
+from .exceptions import TriliumAPIError, TriliumConnectionError
 
 
 logger = logging.getLogger(__name__)
