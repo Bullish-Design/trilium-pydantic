@@ -10,6 +10,9 @@ from __future__ import annotations
 from typing import Optional
 from pydantic import Field, field_validator, ConfigDict
 from confidantic import PluginRegistry, SettingsType
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class TriliumConfig(SettingsType):
@@ -51,6 +54,8 @@ class TriliumConfig(SettingsType):
 
 # Register the trilium settings with confidantic's plugin system
 PluginRegistry.register(TriliumConfig)
+
+TriliumConfig = PluginRegistry.build_class()
 
 
 class ConnectionInfo:

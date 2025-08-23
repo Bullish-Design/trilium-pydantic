@@ -22,7 +22,7 @@ license = {text = "MIT"}
 
 [tool.uv.sources]
 trilium-py = { git = "https://github.com/Bullish-Design/trilium-py.git" }
-confidantic = {git = "https://github.com/Bullish-Design/confidantic.git"}
+confidantic = { git = "https://github.com/Bullish-Design/confidantic.git"}
 
 [project.optional-dependencies]
 dev = [

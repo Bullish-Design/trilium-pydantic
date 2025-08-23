@@ -54,6 +54,8 @@ from trilium_pydantic import (
 
 from confidantic import Settings
 
+settings = Settings
+
 console = Console()
 
 test_note_id = "P2dGbFt5Xpx1"
@@ -195,9 +197,9 @@ def main() -> int:
         config = TriliumConfig()
 
         # config = Settings(TriliumConfig)  # Use Settings to load TriliumConfig
-        # print(
-        #    f"Using configuration: \n  {str(config).replace(' ', '\n  ')} "  # "{config.trilium_url} with token: {config.trilium_token[:5]}... (truncated for security)"
-        # )
+        print(
+            f"Using configuration: \n  {config}"  # {str(config).replace(' ', '\n  ')} "  # "{config.trilium_url} with token: {config.trilium_token[:5]}... (truncated for security)"
+        )
 
         if not config.is_configured():
             console.print(
