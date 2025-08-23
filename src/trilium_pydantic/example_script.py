@@ -42,8 +42,8 @@ from rich.table import Table
 # from exceptions import TriliumAPIError, TriliumConnectionError
 
 from trilium_pydantic import (
-    Settings,
-    # TriliumConfig,
+    # Settings,
+    TriliumConfig,
     TriliumClient,
     CreateNoteRequest,
     UpdateNoteRequest,
@@ -190,7 +190,11 @@ def main() -> int:
     try:
         # 1. Initialize configuration
         console.print("\n[bold]Step 1: Loading Configuration[/bold]")
-        config = Settings.TriliumConfig()
+        config = TriliumConfig()
+
+        # print(
+        #    f"Using configuration: \n  {str(config).replace(' ', '\n  ')} "  # "{config.trilium_url} with token: {config.trilium_token[:5]}... (truncated for security)"
+        # )
 
         if not config.is_configured():
             console.print(
