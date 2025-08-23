@@ -8,7 +8,8 @@ confidantic's base Settings class via the plugin system.
 from __future__ import annotations
 
 from typing import Optional
-from pydantic import Field, field_validator, ConfigDict, BaseSettings
+from pydantic import Field, field_validator, ConfigDict
+from pydantic_settings import BaseSettings
 from confidantic import PluginRegistry, SettingsType
 from dotenv import load_dotenv
 
