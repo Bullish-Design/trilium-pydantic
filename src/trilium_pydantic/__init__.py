@@ -27,7 +27,7 @@ from .models import (
 # Import confidantic Settings (with our trilium settings already registered)
 from confidantic import Settings
 
-__version__ = "0.1.6"
+
 __all__ = [
     "TriliumClient",
     # "TriliumConfig",
