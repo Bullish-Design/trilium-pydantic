@@ -52,9 +52,13 @@ from trilium_pydantic import (
     TriliumConnectionError,
 )
 
-from confidantic import Settings
+# from confidantic import Settings
 
-settings = Settings
+# settings = Settings
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 console = Console()
 

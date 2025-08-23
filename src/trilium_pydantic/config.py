@@ -8,14 +8,14 @@ confidantic's base Settings class via the plugin system.
 from __future__ import annotations
 
 from typing import Optional
-from pydantic import Field, field_validator, ConfigDict
+from pydantic import Field, field_validator, ConfigDict, BaseSettings
 from confidantic import PluginRegistry, SettingsType
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-class TriliumConfig(SettingsType):
+class TriliumConfig(BaseSettings):  # SettingsType):
     """TriliumNext-specific configuration fields."""
 
     model_config = ConfigDict(
@@ -26,12 +26,16 @@ class TriliumConfig(SettingsType):
     )
 
     trilium_url: str = Field(
-        default="http://localhost:8081", description="TriliumNext server URL"
+        alias="TRILIUM_URL",
+        default="http://localhost:8081",
+        description="TriliumNext server URL",
     )
     trilium_token: Optional[str] = Field(
-        default=None, description="ETAPI authentication token"
+        alias="TRILIUM_TOKEN", default=None, description="ETAPI authentication token"
     )
-    log_level: str = Field(default="INFO", description="Logging level")
+    log_level: str = Field(
+        alias="LOG_LEVEL", default="INFO", description="Logging level"
+    )
 
     @field_validator("trilium_url")
     @classmethod
