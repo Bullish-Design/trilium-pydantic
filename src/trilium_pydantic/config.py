@@ -8,12 +8,19 @@ confidantic's base Settings class via the plugin system.
 from __future__ import annotations
 
 from typing import Optional
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, ConfigDict
 from confidantic import PluginRegistry, SettingsType
 
 
 class TriliumConfig(SettingsType):
     """TriliumNext-specific configuration fields."""
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+    )
 
     trilium_url: str = Field(
         default="http://localhost:8081", description="TriliumNext server URL"

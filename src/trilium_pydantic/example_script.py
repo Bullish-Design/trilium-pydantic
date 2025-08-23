@@ -52,6 +52,8 @@ from trilium_pydantic import (
     TriliumConnectionError,
 )
 
+from confidantic import Settings
+
 console = Console()
 
 test_note_id = "P2dGbFt5Xpx1"
@@ -192,6 +194,7 @@ def main() -> int:
         console.print("\n[bold]Step 1: Loading Configuration[/bold]")
         config = TriliumConfig()
 
+        # config = Settings(TriliumConfig)  # Use Settings to load TriliumConfig
         # print(
         #    f"Using configuration: \n  {str(config).replace(' ', '\n  ')} "  # "{config.trilium_url} with token: {config.trilium_token[:5]}... (truncated for security)"
         # )
