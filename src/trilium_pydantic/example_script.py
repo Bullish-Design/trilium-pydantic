@@ -17,8 +17,9 @@ Usage:
 """
 # /// script
 # dependencies = [
-#   "trilium-py>=1.2.0",
-#   "pydantic>=2.5.0",
+#   "trilium-pydantic @ https://github.com/Bullish-Design/trilium-pydantic.git",
+#   "confidantic @ https://github.com/Bullish-Design/confidantic.git",
+#    "pydantic>=2.5.0",
 #   "pydantic-settings>=2.0.0",
 #   "rich>=13.0.0",
 # ]
@@ -35,10 +36,21 @@ from rich.table import Table
 
 # Import our trilium-pydantic components
 # (In real usage, these would be: from trilium_pydantic import ...)
-from config import TriliumConfig
-from client import TriliumClient
-from models import CreateNoteRequest, UpdateNoteRequest, SearchRequest
-from exceptions import TriliumAPIError, TriliumConnectionError
+# from config import TriliumConfig
+# from client import TriliumClient
+# from models import CreateNoteRequest, UpdateNoteRequest, SearchRequest
+# from exceptions import TriliumAPIError, TriliumConnectionError
+
+from trilium_pydantic import (
+    # Settings,
+    TriliumConfig,
+    TriliumClient,
+    CreateNoteRequest,
+    UpdateNoteRequest,
+    SearchRequest,
+    TriliumAPIError,
+    TriliumConnectionError,
+)
 
 console = Console()
 

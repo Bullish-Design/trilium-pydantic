@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, ConfigDict
 
 
 # Request Models
@@ -67,6 +67,8 @@ class SearchRequest(BaseModel):
 class NoteAttribute(BaseModel):
     """Attribute attached to a note."""
 
+    model_config = ConfigDict(populate_by_name=True)
+
     attribute_id: Optional[str] = Field(
         default=None, alias="attributeId", description="Attribute ID"
     )
@@ -88,9 +90,6 @@ class NoteAttribute(BaseModel):
     utc_date_created: Optional[datetime] = Field(default=None, alias="utcDateCreated")
     utc_date_modified: Optional[datetime] = Field(default=None, alias="utcDateModified")
 
-    class Config:
-        populate_by_name = True
-
 
 # Convenience alias
 NoteAttributes = List[NoteAttribute]
@@ -99,6 +98,8 @@ NoteAttributes = List[NoteAttribute]
 # Response Models
 class Note(BaseModel):
     """TriliumNext note representation."""
+
+    model_config = ConfigDict(populate_by_name=True)
 
     note_id: str = Field(alias="noteId", description="Unique note identifier")
     title: str = Field(description="Note title")
@@ -135,12 +136,11 @@ class Note(BaseModel):
         default_factory=list, description="Note attributes"
     )
 
-    class Config:
-        populate_by_name = True
-
 
 class AppInfo(BaseModel):
     """TriliumNext application information."""
+
+    model_config = ConfigDict(populate_by_name=True)
 
     app_version: str = Field(alias="appVersion", description="Application version")
     db_version: int = Field(alias="dbVersion", description="Database version")

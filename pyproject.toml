@@ -1,17 +1,20 @@
 [project]
 name = "trilium-pydantic"
-version = "0.1.4"
+version = "0.1.6"
 description = "Type-safe Python library for TriliumNext ETAPI"
 authors = [
     {name = "Bullish-Design", email = "BullishDesignEngineering@gmail.com"}
 ]
 dependencies = [
-    "trilium-py>=1.2.0",
+    "trilium-py",
+    "confidantic",
     "pydantic>=2.5.0",
     "pydantic-settings>=2.0.0",
     "httpx>=0.25.0",
     "python-dotenv>=1.0.0",
     "structlog>=23.0.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
 ]
 requires-python = ">=3.11"
 readme = "README.md"
@@ -19,6 +22,7 @@ license = {text = "MIT"}
 
 [tool.uv.sources]
 trilium-py = { git = "https://github.com/Bullish-Design/trilium-py.git" }
+confidantic = {git = "https://github.com/Bullish-Design/confidantic.git"}
 
 [project.optional-dependencies]
 dev = [

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from .client import TriliumClient
-from .config import TriliumConfig, ConnectionInfo
+from .config import ConnectionInfo  # TriliumConfig
 from .exceptions import (
     TriliumError,
     TriliumAPIError,
@@ -24,10 +24,14 @@ from .models import (
     NoteAttributes,
 )
 
-__version__ = "0.1.0"
+# Import confidantic Settings (with our trilium settings already registered)
+from confidantic import Settings
+
+__version__ = "0.1.6"
 __all__ = [
     "TriliumClient",
-    "TriliumConfig",
+    # "TriliumConfig",
+    "Settings",
     "ConnectionInfo",
     "TriliumError",
     "TriliumAPIError",

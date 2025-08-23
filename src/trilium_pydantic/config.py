@@ -1,24 +1,19 @@
 #!/usr/bin/env python3
-"""Configuration management for trilium-pydantic.
+"""TriliumNext-specific settings using confidantic.
 
-Handles environment-based configuration with validation.
+This module defines trilium-specific configuration fields that extend
+confidantic's base Settings class via the plugin system.
 """
 
 from __future__ import annotations
 
-import os
-from pathlib import Path
 from typing import Optional
+from pydantic import Field, field_validator
+from confidantic import PluginRegistry, SettingsType
 
-from pydantic import BaseModel, Field, validator
-from pydantic_settings import BaseSettings
 
-
-class TriliumConfig(BaseSettings):
-    """Configuration for TriliumNext client.
-
-    Loads from environment variables or .env file.
-    """
+class TriliumConfig(SettingsType):
+    """TriliumNext-specific configuration fields."""
 
     trilium_url: str = Field(
         default="http://localhost:8081", description="TriliumNext server URL"
@@ -28,17 +23,14 @@ class TriliumConfig(BaseSettings):
     )
     log_level: str = Field(default="INFO", description="Logging level")
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
-
-    @validator("trilium_url")
+    @field_validator("trilium_url")
+    @classmethod
     def validate_url(cls, v: str) -> str:
         """Ensure URL doesn't end with slash."""
         return v.rstrip("/")
 
-    @validator("trilium_token")
+    @field_validator("trilium_token")
+    @classmethod
     def validate_token(cls, v: Optional[str]) -> Optional[str]:
         """Validate token is not empty."""
         if v is not None and v.strip() == "":
@@ -50,24 +42,40 @@ class TriliumConfig(BaseSettings):
         return self.trilium_token is not None
 
 
-class ConnectionInfo(BaseModel):
-    """Information about TriliumNext server connection."""
+# Register the trilium settings with confidantic's plugin system
+PluginRegistry.register(TriliumConfig)
 
-    server_url: str
-    token_preview: str
-    is_connected: bool = False
-    app_version: Optional[str] = None
-    build_date: Optional[str] = None
+
+class ConnectionInfo:
+    """Information about TriliumNext server connection.
+
+    Note: This is kept as a separate class for backward compatibility
+    and because it represents derived/computed state rather than configuration.
+    """
+
+    def __init__(
+        self,
+        server_url: str,
+        token_preview: str,
+        is_connected: bool = False,
+        app_version: Optional[str] = None,
+        build_date: Optional[str] = None,
+    ):
+        self.server_url = server_url
+        self.token_preview = token_preview
+        self.is_connected = is_connected
+        self.app_version = app_version
+        self.build_date = build_date
 
     @classmethod
-    def from_config(cls, config: TriliumConfig) -> ConnectionInfo:
-        """Create connection info from config."""
+    def from_settings(cls, settings) -> ConnectionInfo:
+        """Create connection info from confidantic settings."""
         token_preview = ""
-        if config.trilium_token:
-            token = config.trilium_token
+        if settings.trilium_token:
+            token = settings.trilium_token
             if len(token) > 10:
                 token_preview = f"{token[:5]}***{token[-3:]}"
             else:
                 token_preview = "***"
 
-        return cls(server_url=config.trilium_url, token_preview=token_preview)
+        return cls(server_url=settings.trilium_url, token_preview=token_preview)

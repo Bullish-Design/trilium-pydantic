@@ -1,13 +1,13 @@
-
 #!/usr/bin/env python3
 import sys
 from datetime import datetime, timezone
 
 # Ensure local package imports resolve
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from models import NoteAttribute, Note  # type: ignore
+from .models import NoteAttribute, Note  # type: ignore
 
 
 def test_note_attribute_aliases_and_dump_by_alias():
@@ -39,8 +39,18 @@ def test_note_attribute_aliases_and_dump_by_alias():
     assert attr.date_created.tzinfo is not None
 
     dumped = attr.model_dump(by_alias=True, exclude_none=True)
-    for k in ["attributeId", "noteId", "type", "name", "value", "isInheritable",
-              "dateCreated", "dateModified", "utcDateCreated", "utcDateModified"]:
+    for k in [
+        "attributeId",
+        "noteId",
+        "type",
+        "name",
+        "value",
+        "isInheritable",
+        "dateCreated",
+        "dateModified",
+        "utcDateCreated",
+        "utcDateModified",
+    ]:
         assert k in dumped
 
 

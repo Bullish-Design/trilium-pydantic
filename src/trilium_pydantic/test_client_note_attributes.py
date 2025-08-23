@@ -1,12 +1,11 @@
-
 #!/usr/bin/env python3
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from client import TriliumClient  # type: ignore
-from models import Note  # type: ignore
+from .client import TriliumClient  # type: ignore
+from .models import Note  # type: ignore
 
 
 class DummyConfig:
@@ -42,7 +41,14 @@ def test_client_get_note_parses_attributes():
         "parentBranchIds": [],
         "childBranchIds": [],
         "attributes": [
-            {"attributeId": "a1", "noteId": "note-999", "type": "label", "name": "status", "value": "draft", "isInheritable": False}
+            {
+                "attributeId": "a1",
+                "noteId": "note-999",
+                "type": "label",
+                "name": "status",
+                "value": "draft",
+                "isInheritable": False,
+            }
         ],
     }
 
