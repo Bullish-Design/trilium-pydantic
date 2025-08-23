@@ -1,51 +1,44 @@
 #!/usr/bin/env python3
-"""TriliumNext-specific settings using confidantic.
+"""Configuration management for trilium-pydantic.
 
-This module defines trilium-specific configuration fields that extend
-confidantic's base Settings class via the plugin system.
+Handles environment-based configuration with validation.
 """
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
 from typing import Optional
-from pydantic import Field, field_validator, ConfigDict
+
+from pydantic import BaseModel, Field, validator
 from pydantic_settings import BaseSettings
-from confidantic import PluginRegistry, SettingsType
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
-class TriliumConfig(BaseSettings):  # SettingsType):
-    """TriliumNext-specific configuration fields."""
+class TriliumConfig(BaseSettings):
+    """Configuration for TriliumNext client.
 
-    model_config = ConfigDict(
-        # populate_by_name=True,
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-    )
+    Loads from environment variables or .env file.
+    """
 
     trilium_url: str = Field(
-        alias="TRILIUM_URL",
-        default="http://localhost:8081",
-        description="TriliumNext server URL",
+        default="http://localhost:8081", description="TriliumNext server URL"
     )
     trilium_token: Optional[str] = Field(
-        alias="TRILIUM_TOKEN", default=None, description="ETAPI authentication token"
+        default=None, description="ETAPI authentication token"
     )
-    log_level: str = Field(
-        alias="LOG_LEVEL", default="INFO", description="Logging level"
-    )
+    log_level: str = Field(default="INFO", description="Logging level")
 
-    @field_validator("trilium_url")
-    @classmethod
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        case_sensitive = False
+
+    @validator("trilium_url")
     def validate_url(cls, v: str) -> str:
         """Ensure URL doesn't end with slash."""
         return v.rstrip("/")
 
-    @field_validator("trilium_token")
-    @classmethod
+    @validator("trilium_token")
     def validate_token(cls, v: Optional[str]) -> Optional[str]:
         """Validate token is not empty."""
         if v is not None and v.strip() == "":
@@ -57,42 +50,24 @@ class TriliumConfig(BaseSettings):  # SettingsType):
         return self.trilium_token is not None
 
 
-# Register the trilium settings with confidantic's plugin system
-PluginRegistry.register(TriliumConfig)
+class ConnectionInfo(BaseModel):
+    """Information about TriliumNext server connection."""
 
-TriliumConfig = PluginRegistry.build_class()
-
-
-class ConnectionInfo:
-    """Information about TriliumNext server connection.
-
-    Note: This is kept as a separate class for backward compatibility
-    and because it represents derived/computed state rather than configuration.
-    """
-
-    def __init__(
-        self,
-        server_url: str,
-        token_preview: str,
-        is_connected: bool = False,
-        app_version: Optional[str] = None,
-        build_date: Optional[str] = None,
-    ):
-        self.server_url = server_url
-        self.token_preview = token_preview
-        self.is_connected = is_connected
-        self.app_version = app_version
-        self.build_date = build_date
+    server_url: str
+    token_preview: str
+    is_connected: bool = False
+    app_version: Optional[str] = None
+    build_date: Optional[str] = None
 
     @classmethod
-    def from_settings(cls, settings) -> ConnectionInfo:
-        """Create connection info from confidantic settings."""
+    def from_config(cls, config: TriliumConfig) -> ConnectionInfo:
+        """Create connection info from config."""
         token_preview = ""
-        if settings.trilium_token:
-            token = settings.trilium_token
+        if config.trilium_token:
+            token = config.trilium_token
             if len(token) > 10:
                 token_preview = f"{token[:5]}***{token[-3:]}"
             else:
                 token_preview = "***"
 
-        return cls(server_url=settings.trilium_url, token_preview=token_preview)
+        return cls(server_url=config.trilium_url, token_preview=token_preview)
