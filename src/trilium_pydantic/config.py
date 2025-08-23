@@ -19,7 +19,7 @@ class TriliumConfig(SettingsType):
     """TriliumNext-specific configuration fields."""
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        # populate_by_name=True,
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
